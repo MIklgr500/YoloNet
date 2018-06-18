@@ -21,13 +21,20 @@ class Config(object):
                  img_size=[224, 224, 3],
                  batch_size = 8,
                  ncell_in_grid = 16,
-                 NAnchors = 10
+                 NAnchors = 10,
+                 max_box_per_image = 10
                  ):
+        # path and cat
         self.root_dir = root_dir
-        self.cat_list = cat_list
         self.ignore_list = ignore_list
+        # network params
+        self.cat_list = cat_list
         self.train_size = train_size
         self.img_size = img_size
         self.batch_size = batch_size
         self.ncell_in_grid = ncell_in_grid
         self.NAnchors = NAnchors
+        self.max_box_per_image = max_box_per_image
+        # augmentation
+        self.scale_coeff = 10.
+        self.flip_flag = True
