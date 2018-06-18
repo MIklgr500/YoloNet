@@ -155,7 +155,13 @@ class VOC2007Generator(Sequence):
             type: train or valid
             batch_size: int - number samples in one batch
     """
-    def __init__(self, dataset, batch_size=8, utype='train', random_state=134, **kwargs):
+    def __init__(self,
+                 dataset,
+                 batch_size=8,
+                 utype='train',
+                 random_state=134,
+                 img_norm = lambd x: x,
+                 **kwargs):
         self.dataset            = dataset.dataset
         self.ncell_in_grid      = dataset.ncell_in_grid
         self.utype              = utype
@@ -173,6 +179,7 @@ class VOC2007Generator(Sequence):
         self.max_box_per_image  = dataset.max_box_per_image
         self.class2label        = dataset.class2label
         self.label2class        = dataset.label2class
+        self.img_norm           = img_norm
         self.anchors            = [BoundBox(0,
                                             0,
                                             self.dataset.centroids[2*i],
@@ -212,7 +219,7 @@ class VOC2007Generator(Sequence):
                 b_batch[instance_count, 0, 0, 0, true_box_index] = box
                 true_box_index += 1
                 true_box_index = true_box_index % self.max_box_per_image
-            x_batch[instance_count] = img
+            x_batch[instance_count] = self.img_norm(img)
             instance_count += 1
         return [x_batch, b_batch], y_batch
 
