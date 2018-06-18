@@ -240,7 +240,7 @@ class VOC2007Generator(Sequence):
     def _get_label(self, i, params):
         fname = self.dataset[str(self.utype)][i]
 
-        all_objs = copy.deepcopy(train_instance['object'])
+        all_objs = copy.deepcopy(self.dataset['full'][fname])
 
         scale = params['scale']
         offx = params['offx']
@@ -298,7 +298,7 @@ class VOC2007Generator(Sequence):
         """
             Method called at the end of every epoch.
         """
-        pass
+        self.dataset[str(self.utype)] = random.shuffle(self.dataset[str(self.utype)])
 
     def __iter__(self):
         """
