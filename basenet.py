@@ -1,5 +1,5 @@
 from keras.models import Model
-from keras.layers import Input
+from keras.layers import Input, Lambda
 from keras.applications.mobilenet import MobileNet
 from keras.applications.mobilenetv2 import MobileNetV2
 
@@ -25,13 +25,14 @@ class MobileNetFeature(BaseFeatureExtractor):
     """docstring for ClassName"""
     def __init__(self, input_size):
         input_image = Input(shape=(input_size, input_size, 3))
-
+        norm_image = Lambda(function=self.normalize,
+                          output_shape=(input_size, input_size, 3),
+                          name = 'Normalize Image')
         mobilenet = MobileNet(input_shape=(224,224,3),
                               include_top=False,
                               weights='imagenet')
 
-        x = mobilenet(input_image)
-
+        x = mobilenet(norm_image)
         self.feature_extractor = Model(input_image, x)
 
     def normalize(self, image):
